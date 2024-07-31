@@ -12,3 +12,5 @@ This tool requires Python and pip installed on your system.
 Download Python on Windows: https://www.python.org/ftp/python/3.11.9/python-3.11.9-amd64.exe
 <br>
 Download this tool: https://github.com/Cart1416/BaldiLevelBackupTool/releases
+<br>
+![ScreenShot of the app]([http://url/to/img.png](https://github.com/Cart1416/BaldiLevelBackupTool/blob/master/screenshot.png?raw=true))
