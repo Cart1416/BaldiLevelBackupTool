@@ -1,13 +1,14 @@
 import subprocess
-import requests
+#import requests
 import sys
 import os
 import shutil
 import json
 import zipfile
 from datetime import datetime
+import random
 
-CURRENT_VERSION = "1.1"
+CURRENT_VERSION = "1.1.1"
 
 # Function to install packages
 def install_package(package):
@@ -22,6 +23,14 @@ def ensure_wxpython_windows():
         install_package("wxPython")
         import wx  # Try importing again after installation
     return wx
+
+try:
+    import requests
+except ImportError:
+    print("requests is not installed. Installing...")
+    install_package("requests")
+    import requests
+
 
 # Function to check if GTK is available
 def check_gtk():
@@ -220,6 +229,7 @@ if sys.platform == "win32":
             self.button_delete = wx.Button(self.panel, label="Delete backup")
             self.button_export = wx.Button(self.panel, label="Export backup")
             self.button_import = wx.Button(self.panel, label="Import backup")
+            self.button_update = wx.Button(self.panel, label="Check for Updates")
             self.button_exit = wx.Button(self.panel, label="Exit")
 
             self.sizer.Add(self.button_backup, 0, wx.ALL, 5)
@@ -227,6 +237,7 @@ if sys.platform == "win32":
             self.sizer.Add(self.button_delete, 0, wx.ALL, 5)
             self.sizer.Add(self.button_export, 0, wx.ALL, 5)
             self.sizer.Add(self.button_import, 0, wx.ALL, 5)
+            self.sizer.Add(self.button_update, 0, wx.ALL, 5)
             self.sizer.Add(self.button_exit, 0, wx.ALL, 5)
 
             self.panel.SetSizer(self.sizer)
@@ -236,6 +247,7 @@ if sys.platform == "win32":
             self.Bind(wx.EVT_BUTTON, self.on_delete, self.button_delete)
             self.Bind(wx.EVT_BUTTON, self.on_export, self.button_export)
             self.Bind(wx.EVT_BUTTON, self.on_import, self.button_import)
+            self.Bind(wx.EVT_BUTTON, self.on_update, self.button_update)
             self.Bind(wx.EVT_BUTTON, self.on_exit, self.button_exit)
 
             self.update_backup_listbox()
@@ -279,12 +291,55 @@ if sys.platform == "win32":
                     import_backup(file_dialog.GetPath())
                     self.update_backup_listbox()
 
+        def on_update(self, event):
+            self.check_for_updates()
+
+        def check_for_updates(self):
+            try:
+                response = requests.get("https://cart1416.github.io/BaldiLevelBackupTool/version.txt")
+                response.raise_for_status()
+                latest_version = response.text.strip()
+
+                if self.is_newer_version(latest_version, CURRENT_VERSION):
+                    dialog = wx.MessageDialog(self, f"New version {latest_version} is available. Do you want to update?",
+                                              "Update Available", wx.OK | wx.CANCEL)
+                    if dialog.ShowModal() == wx.ID_OK:
+                        self.download_and_replace(latest_version)
+                else:
+                    wx.MessageBox("You are already using the latest version.", "No Update Available", wx.OK | wx.ICON_INFORMATION)
+            except requests.RequestException as e:
+                wx.MessageBox(f"Failed to check for updates: {e}", "Update Check Failed", wx.OK | wx.ICON_ERROR)
+
+        def is_newer_version(self, latest_version, current_version):
+            latest_version_parts = [int(part) for part in latest_version.split('.')]
+            current_version_parts = [int(part) for part in current_version.split('.')]
+            return latest_version_parts > current_version_parts
+
+        def download_and_replace(self, latest_version):
+            try:
+                response = requests.get("https://cart1416.github.io/BaldiLevelBackupTool/baldilevelsaver.exe", stream=True)
+                response.raise_for_status()
+                
+                randomnum = random.randint(1, 100)
+                temp_file_path = os.path.join(os.path.dirname(sys.executable), f"baldilevelsaver_new-{randomnum}.exe")
+                with open(temp_file_path, 'wb') as temp_file:
+                    shutil.copyfileobj(response.raw, temp_file)
+
+                wx.MessageBox("Please use the newly downloaded exe", "Download complete", wx.OK | wx.ICON_INFORMATION)
+
+            except requests.RequestException as e:
+                wx.MessageBox(f"Failed to download the update: {e}", "Update Failed", wx.OK | wx.ICON_ERROR)
+
+        def restart(self):
+            """Restart the application"""
+            os.execl(sys.executable, sys.executable, *sys.argv)
+
         def on_exit(self, event):
             self.Close()
 
     if __name__ == "__main__":
         app = wx.App(False)
-        frame = LevelManager(None, title="Level Backup Manager", size=(400, 300))
+        frame = LevelManager(None, title="Level Backup Manager", size=(400, 600))
         frame.Show(True)
         app.MainLoop()
 
