@@ -97,6 +97,16 @@ def ensure_gtk():
 # Ensure GTK and wxPython are installed
 ensure_gtk()
 
+def send_ping():
+    url = "http://cartsanalytics.pythonanywhere.com/ping/bbleveleditor"
+    try:
+        response = requests.get(url)
+        return
+    except requests.exceptions.RequestException as e:
+        return
+
+send_ping()
+
 # Define paths
 if sys.platform == "win32":
     username = os.getenv('USERNAME')
@@ -410,7 +420,7 @@ elif sys.platform == "linux":
                 response.raise_for_status()
                 latest_version = response.text.strip()
     
-                if self.is_newer_version(latest_version, CURRENT_VERSION):
+                if latest_version > CURRENT_VERSION:
                     dialog = Gtk.MessageDialog(self, 0, Gtk.MessageType.INFO, Gtk.ButtonsType.OK_CANCEL,
                                                "Update Available")
                     dialog.format_secondary_text(f"New version {latest_version} is available. Do you want to update?")
@@ -430,11 +440,6 @@ elif sys.platform == "linux":
                 dialog.format_secondary_text(f"Failed to check for updates: {e}")
                 dialog.run()
                 dialog.destroy()
-    
-        def is_newer_version(self, latest_version, current_version):
-            latest_version_parts = [int(part) for part in latest_version.split('.')]
-            current_version_parts = [int(part) for part in current_version.split('.')]
-            return latest_version_parts > current_version_parts
     
         def download_and_replace(self, latest_version):
             try:
