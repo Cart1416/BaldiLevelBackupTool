@@ -1,10 +1,13 @@
 import subprocess
+import requests
 import sys
 import os
 import shutil
 import json
 import zipfile
 from datetime import datetime
+
+CURRENT_VERSION = "1.1"
 
 # Function to install packages
 def install_package(package):
