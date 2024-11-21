@@ -34,4 +34,5 @@ jobs:
           python_ver: '3.10'
           python_arch: x64
           exe_path: ./dist
-          upload_exe_with_name: baldilevelsaver
+          upload_exe_with_name: baldilevelsaver.py
+          
