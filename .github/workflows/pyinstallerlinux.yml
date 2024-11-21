@@ -3,7 +3,7 @@ name: PyInstaller Linux Build
 on:
   push:
     branches:
-      - main  # or the branch you want to trigger the build
+      - "**"  # or the branch you want to trigger the build
 
 jobs:
   build:
