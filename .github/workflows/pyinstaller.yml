@@ -36,7 +36,7 @@ jobs:
 
       # Upload the executable as an artifact
       - name: Upload executable artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: my-executable-artifact  # This is the name of the artifact
           path: ./dist  # Path to the output directory
