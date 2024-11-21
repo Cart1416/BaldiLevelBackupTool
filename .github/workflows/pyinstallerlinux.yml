@@ -3,32 +3,13 @@ name: PyInstaller Linux Build
 on:
   push:
     branches:
-      - "**"  # Trigger build on push to the main branch
+      - "**"  
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # Use a suitable Ubuntu version
+    runs-on: ubuntu-22.04
     
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Install dependencies
+      - name: github actions sucks
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: Run PyInstaller to Build Executable
-        run: |
-          pyinstaller --onefile --windowed --distpath ./dist baldilevelsaver.py
-
-      - name: Upload Executable Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: baldilevelsaverlinux
-          path: ./dist/*
+          echo I'm done with trying actions
