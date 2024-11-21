@@ -3,11 +3,11 @@ name: PyInstaller Linux Build
 on:
   push:
     branches:
-      - "**"  # or the branch you want to trigger the build
+      - main  # Trigger build on push to the main branch
 
 jobs:
   build:
-    runs-on: ubuntu-22.04  # or any suitable Ubuntu version
+    runs-on: ubuntu-22.04  # Use a suitable Ubuntu version
     
     steps:
       - name: Checkout repository
@@ -23,20 +23,12 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Run PyInstaller Linux Build
-        uses: JackMcKew/pyinstaller-action-linux@0.1.4
+      - name: Run PyInstaller to Build Executable
+        run: |
+          pyinstaller --onefile --windowed --distpath ./dist baldilevelsaver.py
+
+      - name: Upload Executable Artifact
+        uses: actions/upload-artifact@v3
         with:
-          # Path to the directory containing source code & .spec file (default is src)
-          path: .  # Adjust if your .spec file or code is in another folder
-
-          # Optional: Custom PyPI URL (if needed)
-          pypi_url: https://pypi.python.org/  # Default is fine if you don’t need a custom URL
-
-          # Optional: Custom PyPI Index URL (if needed)
-          pypi_index_url: https://pypi.python.org/simple  # Default is fine
-
-          # Optional: Specify a custom .spec file
-          spec: pyinstaller.py  # Change this if your .spec file has a different name or location
-
-          # Optional: Specify whether to install Tkinter
-          tkinter: false  # Set to true if Tkinter is needed; default is false if not needed 
+          name: baldilevelsaverlinux
+          path: ./dist/*
