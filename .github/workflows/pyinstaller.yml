@@ -16,10 +16,10 @@ jobs:
       - name: Run PyInstaller
         uses: Martin005/pyinstaller-action@v1.2.0
         with:
-          spec: path/to/your_file.spec  # or path/to/your_script.py for .py file
+          spec: baldilevelsaver.py  # or path/to/your_script.py for .py file
           requirements: requirements.txt
           options: '--windowed --onefile'
           python_ver: 3.10
           python_arch: x64
           exe_path: ./dist
-          upload_exe_with_name: my_executable_name
+          upload_exe_with_name: baldilevelsaver
