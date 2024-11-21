@@ -3,7 +3,7 @@ name: PyInstaller Action
 on:
   push:
     branches:
-      - '**'  # Trigger on any push
+      - '**'
 
 jobs:
   build:
@@ -22,21 +22,17 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          # Install PyGObject (required for gi module)
+          sudo apt-get update
+          sudo apt-get install -y libgirepository1.0-dev python3-gi
 
       - name: Run PyInstaller
         uses: Martin005/pyinstaller-action@v1.2.0
         with:
-          spec: baldilevelsaver.py  # Replace with your actual .spec or .py file path
+          spec: baldilevelsaver.py
           requirements: requirements.txt
-          options: '--windowed --onefile'
+          options: '--windowed --onefile --clean'
           python_ver: '3.10'
           python_arch: x64
-          exe_path: ./dist  # The default output path for executables
-          upload_exe_with_name: baldilevelsaver  # Optional: Change this to your desired artifact name
-
-      # Upload the executable as an artifact
-      - name: Upload executable artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: my-baldilevelsaver-artifact  # This is the name of the artifact
-          path: ./dist  # Path to the output directory
+          exe_path: ./dist
+          upload_exe_with_name: baldilevelsaver
