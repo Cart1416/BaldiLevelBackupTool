@@ -39,4 +39,4 @@ jobs:
           spec: pyinstaller.py  # Change this if your .spec file has a different name or location
 
           # Optional: Specify whether to install Tkinter
-          tkinter: false  # Set to true if Tkinter is needed; default is false if not needed
+          tkinter: false  # Set to true if Tkinter is needed; default is false if not needed 
