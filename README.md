@@ -14,3 +14,5 @@ Download Python on Windows: https://www.python.org/ftp/python/3.11.9/python-3.11
 Download this tool: https://github.com/Cart1416/BaldiLevelBackupTool/releases
 <br>
 ![ScreenShot of the app](https://github.com/Cart1416/BaldiLevelBackupTool/blob/master/screenshot.png?raw=true)
+<br>
+Note: this app has analytics each time you open the app publicly accesible at [cartsanalytics.pythonanywhere.com](http://cartsanalytics.pythonanywhere.com/)
